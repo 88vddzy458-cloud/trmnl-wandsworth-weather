@@ -32,39 +32,39 @@ def format_time(dt_str):
 
 def format_date(dt_str):
     dt = datetime.fromisoformat(dt_str)
-    return dt.strftime("%a %d %b")
+    return dt.strftime("%a %d")
 
 @app.route("/forecast")
-def forecast():
+def forecast_trmnl_compact():
     data = get_weather()
-    output = ""
+    now = datetime.now().strftime("%H:%M")
 
-    # Sunrise & Sunset
+    # Header with sunrise, sunset, and last update
     sunrise = format_time(data["daily"]["sunrise"][0])
     sunset = format_time(data["daily"]["sunset"][0])
-    output += f"Wandsworth Weather\nSunrise: {sunrise}  |  Sunset: {sunset}\n\n"
+    output = f"Wandsworth Weather\nSun: {sunrise}  |  Set: {sunset}\nUpd: {now}\n\n"
 
-    # Next 8 Hours
-    output += "Next 8 Hours\nTime  | Temp | Feels | Condition | Rain\n------------------------------------------\n"
+    # Next 8 hours (hourly forecast)
+    output += "Next 8h\nTime | T  | F  | C  | R\n" + "-"*25 + "\n"
     for i in range(8):
         time = format_time(data["hourly"]["time"][i])
-        temp = f"{round(data['hourly']['temperature_2m'][i])}°C"
-        feels = f"{round(data['hourly']['apparent_temperature'][i])}°C"
+        temp = f"{round(data['hourly']['temperature_2m'][i])}"
+        feels = f"{round(data['hourly']['apparent_temperature'][i])}"
         code = data["hourly"]["weathercode"][i]
         condition = WEATHER_ICONS.get(code, "🌤️")
-        rain = f"{round(data['hourly']['precipitation_probability'][i])}%"
-        output += f"{time} | {temp.ljust(4)} | {feels.ljust(4)} | {condition.ljust(9)} | {rain}\n"
+        rain = f"{round(data['hourly']['precipitation_probability'][i])}"
+        output += f"{time} | {temp.rjust(2)} | {feels.rjust(2)} | {condition} | {rain}%\n"
 
-    # Next 3 Days
-    output += "\nNext 3 Days\nDate       | High | Low  | Condition | Rain\n---------------------------------------------\n"
+    # Next 3 days (daily forecast)
+    output += "\nNext 3d\nDate      | H | L | C  | R\n" + "-"*28 + "\n"
     for i in range(1,4):
         date = format_date(data["daily"]["time"][i])
-        high = f"{round(data['daily']['temperature_2m_max'][i])}°C"
-        low = f"{round(data['daily']['temperature_2m_min'][i])}°C"
+        high = f"{round(data['daily']['temperature_2m_max'][i])}"
+        low = f"{round(data['daily']['temperature_2m_min'][i])}"
         code = data["daily"]["weathercode"][i]
         condition = WEATHER_ICONS.get(code, "🌤️")
-        rain = f"{round(data['daily']['precipitation_probability_max'][i])}%"
-        output += f"{date.ljust(10)} | {high.ljust(4)} | {low.ljust(4)} | {condition.ljust(9)} | {rain}\n"
+        rain = f"{round(data['daily']['precipitation_probability_max'][i])}"
+        output += f"{date.ljust(9)} |{high.rjust(2)} |{low.rjust(2)} | {condition} | {rain}%\n"
 
     return Response(output, mimetype="text/plain; charset=utf-8")
 
