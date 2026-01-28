@@ -5,5 +5,5 @@
   "icon": "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
   "type": "text",
   "endpoint": "https://trmnl-wandsworth-weather.onrender.com/forecast"
-  "refresh_interval": 1800
+  "refresh_interval": 300
 }
