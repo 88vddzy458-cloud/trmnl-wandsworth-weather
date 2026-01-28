@@ -4,6 +4,6 @@
   "description": "Displays sunrise, sunset, next 8 hours (with feels like), and next 3 days forecast with temperature, condition (icons), and chance of rain in aligned columns for TRMNL e-ink display.",
   "icon": "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
   "type": "text/plain",
-  "endpoint": "https://trmnl-wandsworth-weather.onrender.com/forecast"
+  "endpoint": "https://trmnl-wandsworth-weather.onrender.com/forecast",
   "refresh_interval": 300
 }
